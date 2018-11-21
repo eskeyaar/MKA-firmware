@@ -1,10 +1,7 @@
-<img align="right" src="Documentation/Logo/MarlinKimbra%20Logo%20GitHub.png"/>
 
-# MK4duo 3D Printer Firmware for all Atmel AVR boards and Arduino Due
+# MKA 3D Printer Firmware for Anisoprint Composer 3D printers
 
-## Version 4.3.6.
-
-#### Please donate to support this project https://www.paypal.me/MagoKimbra
+# Based on MK4duo 3D Printer Firmware Version 4.3.6 by [MagoKimbra](https://github.com/MKFirmware)
 
 ### Special thanks
  - [Scott Lahteine](https://github.com/thinkyhead)
