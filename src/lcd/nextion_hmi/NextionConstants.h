@@ -17,15 +17,13 @@
 #define PAGE_FILEINFO 4
 #define PAGE_PRINTING 5
 #define PAGE_MESSAGE 6
-#define PAGE_PAUSE 7
-#define PAGE_CHANGE 8
-#define PAGE_WIZARD 9
-#define PAGE_MENU 10
-#define PAGE_MOVEMENT 11
-#define PAGE_EXTRUDERS 12
-#define PAGE_SETTINGS 13
-#define PAGE_ABOUT 14
-#define PAGE_WIZARDZ 15
+#define PAGE_WIZARD 7
+#define PAGE_MENU 8
+#define PAGE_MOVEMENT 9
+#define PAGE_SETTINGS 10
+#define PAGE_ABOUT 11
+#define PAGE_WIZARDZ 12
+#define PAGE_C_NUMBER 13
 
 //Icons
 #define NEX_ICON_READY 1
@@ -60,6 +58,8 @@
 #define NEX_ICON_FILE_GCODE 26
 
 #define NEX_ICON_DONE 27
+
+
 
 /*	      char UBL_LCD_GCODE[20];
 	      commands.enqueue_and_echo_P(PSTR("G28"));

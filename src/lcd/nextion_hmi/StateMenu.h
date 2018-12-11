@@ -24,16 +24,22 @@ namespace StateMenu {
 	void PrintControlBack(void *ptr);
 	void Control_CancelPrint(void *ptr);
 	void Control_CancelPrint_Yes(void *ptr);
-
+	void Control_Tune(void *ptr);
+	void Control_Tune_OK(void *ptr);
 
 	//Maintenance menu
 	void ActivateMaintenance(void *ptr=0);
 	void Maintenance_Move(void *ptr);
 	void Maintenance_About(void* ptr);
+	void Maintenance_Settings(void* ptr);
+	void Maintenance_Settings_OK(void* ptr);
 	void MaintenanceBack(void *ptr);
 
 	//Calibrate menu
 	void ActivateCalibrate(void *ptr=0);
+
+	//Calibrate head menu
+	void ActivateCalibrateHead(void *ptr=0);
 
 	//Materials menu
 	void ActivateMaterials(void *ptr=0);

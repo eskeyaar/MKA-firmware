@@ -42,12 +42,12 @@
 #define CONFIG_OFFSET 	0
 
 #if ENABLED(EEPROM_LITE)
-	#define EEPROM_VERSION "MKA11"
+	#define EEPROM_VERSION "MKA12"
 
 /**
  *
  *
- * MKA11 EEPROM Layout:
+ * MKA12 EEPROM Layout:
  *
  * ****************************** CONST *********************************
  *  Serial Number												(char x10)
@@ -62,6 +62,8 @@
  *  M92   E0 ...      	  mechanics.axis_steps_per_mm E0 ...    (float x6)
  *  M206  XYZ             mechanics.home_offset                 (float x3)
  *  M218  T   XY          tools.hotend_offset                   (float x6)
+ * 	switch_pos_x		  tools.switch_pos_x					(float)
+ * 	switch_pos_y		  tools.switch_pos_y					(float)
  *
  * NEXTION_HMI:
  *  M145  S0  H           NextionHMI::autoPreheatTempHotend     (uint16_t)
@@ -400,6 +402,8 @@ bool EEPROM::Load_Const() {
      * M500 - Store Configuration
      */
     bool EEPROM::Store_Settings() {
+
+      Serial.println("Store_Settings");
       char ver[6] = "00000";
 
       uint16_t working_crc = 0;
@@ -426,6 +430,9 @@ bool EEPROM::Load_Const() {
         EEPROM_WRITE(mechanics.home_offset);
       #endif
       EEPROM_WRITE(tools.hotend_offset);
+
+      EEPROM_WRITE(tools.switch_pos_x);
+      EEPROM_WRITE(tools.switch_pos_y);
 
 
       #if ENABLED(NEXTION_HMI)
@@ -517,6 +524,9 @@ bool EEPROM::Load_Const() {
           EEPROM_READ(mechanics.home_offset);
         #endif
         EEPROM_READ(tools.hotend_offset);
+
+        EEPROM_READ(tools.switch_pos_x);
+        EEPROM_READ(tools.switch_pos_y);
 
 
 		#if ENABLED(NEXTION_HMI)

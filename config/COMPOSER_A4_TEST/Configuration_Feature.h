@@ -210,24 +210,15 @@
 #define CHANGE_MOVES 9
 
 //Change to T0 - prepare - prepare_fast - start - switch - finish
-//#define CHANGE_T0_X {297.0, 297.0, 315.2, 315.2, 335.0, 335.0, 335.0, 335.0, 335.0 }
-//#define CHANGE_T0_Y {17,    7,     7,     30,     30,   7,     30,    7,     30    }
-//#define CHANGE_T0_F {200,   200,   50,    200,   200 ,  50,    50,    50,    50    }
+#define CHANGE_T0_X {297.0, 297.0, 315.2, 315.2, 335.0, 335.0, 335.0, 335.0, 335.0}
+#define CHANGE_T0_Y {17,    7,     7,     30,     30,   7,     30,    7,     30   }
+#define CHANGE_T0_F {200,   200,   50,    200,   200 ,  50,    50,    50,    50  }
 
 //Change to T1 - prepare - prepare_fast - start - switch - finish
-//#define CHANGE_T1_X {335.0, 335.0, 335.0, 335.0, 313.9, 335.0, 335.0, 335.0, 335.0 }
-//#define CHANGE_T1_Y {30,    7,    30,     7,     7,     7,     30,     7,    30    }
-//#define CHANGE_T1_F {200,   50,   50,     50,    50,    200,   50,   50,    50     }
 
-//Change to T0 - prepare - prepare_fast - start - switch - finish
-#define CHANGE_T0_X {296.0, 296.0, 315.2, 304,   304,  336.0,  336.0, 332.0,  332.0}
-#define CHANGE_T0_Y {17,    7,     7,     7,     50,   50,     4,     4,      50   }
-#define CHANGE_T0_F {200,   200,   50,    200,   200 , 200,    34,    200,    34   }
-
-//Change to T1 - prepare - prepare_fast - start - switch - finish
-#define CHANGE_T1_X {296.0, 336.0, 336.0, 313.9, 328.0, 328.0, 298.0, 297.0, 296.0 }
-#define CHANGE_T1_Y {50,    50,    7,     7,     7,     50,    50,    50,    50    }
-#define CHANGE_T1_F {200,   200,   34,    50,    200,   34,    200,   200,   200   }
+#define CHANGE_T1_X {335.0, 335.0, 335.0, 335.0, 313.9, 335.0, 335.0, 335.0, 335.0}
+#define CHANGE_T1_Y {30,    7,    30,     7,     7,     7,     30,     7,    30   }
+#define CHANGE_T1_F {200,   50,   50,     50,    50,    200,   50,   50,    50  }
 
 /***********************************************************************/
 
@@ -2114,14 +2105,14 @@
  **************************************************************************/
 //#define ADVANCED_PAUSE_FEATURE
 
-#define PAUSE_PARK_RETRACT_FEEDRATE 10      //+ (mm/s) Initial retract feedrate.
+#define PAUSE_PARK_RETRACT_FEEDRATE 30      //+ (mm/s) Initial retract feedrate.
 #define PAUSE_PARK_RETRACT_LENGTH 5         //+ (mm) Initial retract.
                                             // This short retract is done immediately, before parking the nozzle.
-#define PAUSE_PARK_UNLOAD_FEEDRATE 30       // (mm/s) Unload filament feedrate. This can be pretty fast.
+#define PAUSE_PARK_UNLOAD_FEEDRATE 40       // (mm/s) Unload filament feedrate. This can be pretty fast.
 
 #if ENABLED(NEXTION_HMI)	      //For nextion HMI material loading/unloading wizard
-	#define PAUSE_PARK_UNLOAD_LENGTH {740, 900, 850}  // (mm) E0, E1, E2 length should be equal to DRIVER_EXTRUDERS
-	#define PAUSE_PARK_LOAD_LENGTH {610, 800, 740}    // (mm) E0, E1, E2 length should be equal to DRIVER_EXTRUDERS
+	#define PAUSE_PARK_UNLOAD_LENGTH {750, 825, 850}  // (mm) E0, E1, E2 length should be equal to DRIVER_EXTRUDERS
+	#define PAUSE_PARK_LOAD_LENGTH {635, 655, 740}    // (mm) E0, E1, E2 length should be equal to DRIVER_EXTRUDERS
 #else
 #define PAUSE_PARK_UNLOAD_LENGTH 100        // (mm) The length of filament for a complete unload.
                                             //   For Bowden, the full length of the tube and nozzle.
@@ -2132,7 +2123,7 @@
                                             //   For direct drive, the full length of the nozzle.
 #endif
 
-#define PAUSE_PARK_LOAD_FEEDRATE 30         // (mm/s) Load filament feedrate. This can be pretty fast.
+#define PAUSE_PARK_LOAD_FEEDRATE 40         // (mm/s) Load filament feedrate. This can be pretty fast.
 
 #define PAUSE_PARK_EXTRUDE_FEEDRATE 5       // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
 #define PAUSE_PARK_EXTRUDE_LENGTH 50        // (mm) Length to extrude after loading.
@@ -2141,7 +2132,7 @@
                                             //   until extrusion is consistent, and to purge old filament.
 
                                             // Filament Unload does a Retract, Delay, and Purge first:
-#define FILAMENT_UNLOAD_RETRACT_LENGTH 15   // (mm) Unload initial retract length.
+#define FILAMENT_UNLOAD_RETRACT_LENGTH 10   // (mm) Unload initial retract length.
 #define FILAMENT_UNLOAD_DELAY 5000          // (ms) Delay for the filament to cool after retract.
 #define FILAMENT_UNLOAD_PURGE_LENGTH 8      // (mm) An unretract is done, then this length is purged.
 

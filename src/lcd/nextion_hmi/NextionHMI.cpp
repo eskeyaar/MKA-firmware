@@ -96,6 +96,7 @@ void NextionHMI::Init() {
 	StateMovement::Init();
 	StateWizardZ::Init();
 	StateAbout::Init();
+	StateSettings::Init();
 
 
 }
@@ -136,23 +137,19 @@ void NextionHMI::DrawUpdate() {
 	         break;
 	    case PAGE_MESSAGE : //Nothing to update
 	         break;
-	    case PAGE_PAUSE :
-	         break;
-	    case PAGE_CHANGE :
-	         break;
 	    case PAGE_WIZARD : StateWizard::DrawUpdate();
 	         break;
 	    case PAGE_MENU : //Maintenance_DrawUpdate();
 	         break;
 	    case PAGE_MOVEMENT :StateMovement::DrawUpdate();
 	         break;
-	    case PAGE_EXTRUDERS :
-	         break;
 	    case PAGE_SETTINGS :
 	         break;
 	    case PAGE_ABOUT :
 	         break;
 	    case PAGE_WIZARDZ : StateWizardZ::DrawUpdate();
+	         break;
+	    case PAGE_C_NUMBER :
 	         break;
 	}
 }
@@ -171,23 +168,19 @@ void NextionHMI::TouchUpdate() {
 	         break;
 	    case PAGE_MESSAGE : StateMessage::TouchUpdate();
 	         break;
-	    case PAGE_PAUSE :
-	         break;
-	    case PAGE_CHANGE :
-	         break;
 	    case PAGE_WIZARD : StateWizard::TouchUpdate();
 	         break;
 	    case PAGE_MENU : StateMenu::TouchUpdate();
 	         break;
 	    case PAGE_MOVEMENT : StateMovement::TouchUpdate();
 	         break;
-	    case PAGE_EXTRUDERS :
-	         break;
-	    case PAGE_SETTINGS :
+	    case PAGE_SETTINGS : StateSettings::TouchUpdate();
 	         break;
 	    case PAGE_ABOUT : StateAbout::TouchUpdate();
 	         break;
 	    case PAGE_WIZARDZ : StateWizardZ::TouchUpdate();
+	         break;
+	    case PAGE_C_NUMBER : StateEditNumber::TouchUpdate();
 	         break;
 	}
 }
@@ -213,23 +206,19 @@ void NextionHMI::ShowState(uint8_t state_id) {
 		         break;
 		    case PAGE_MESSAGE :
 		         break;
-		    case PAGE_PAUSE :
-		         break;
-		    case PAGE_CHANGE :
-		         break;
 		    case PAGE_WIZARD :
 		         break;
 		    case PAGE_MENU :
 		         break;
 		    case PAGE_MOVEMENT : StateMovement::Activate(MODE_MOVE_AXIS);
 		         break;
-		    case PAGE_EXTRUDERS :
-		         break;
 		    case PAGE_SETTINGS :
 		         break;
 		    case PAGE_ABOUT : StateAbout::Activate();
 		         break;
 		    case PAGE_WIZARDZ :
+		         break;
+		    case PAGE_C_NUMBER :
 		         break;
 		}
 }
@@ -245,8 +234,21 @@ void NextionHMI::RaiseEvent(HMIevent event, uint8_t eventArg, const char *eventM
 			return;
 		case HMIevent::TEMPERATURE_ERROR :
 			ZERO(NextionHMI::buffer);
-			sprintf_P(NextionHMI::buffer, PSTR("%s %d"), MSG_STOPPED_HEATER, eventArg);
-			StateMessage::ActivatePGM_M(MESSAGE_ERROR, NEX_ICON_ERROR, eventMsg, NextionHMI::buffer, 1, PSTR(MSG_OK), StateMessage::ReturnToLastState, 0, 0);
+			sprintf_P(NextionHMI::buffer, PSTR("%s\\r%s %d"), eventMsg, MSG_STOPPED_HEATER, eventArg);
+			StateMessage::ActivatePGM_M(MESSAGE_ERROR, NEX_ICON_ERROR, MSG_HEATER_ERROR, NextionHMI::buffer, 1, PSTR(MSG_OK), StateMessage::ReturnToLastState, 0, 0);
+			return;
+		case HMIevent::SD_ERROR :
+			if (eventArg!=0)
+			{
+				ZERO(NextionHMI::buffer);
+				sprintf_P(NextionHMI::buffer, PSTR("%s %d"), eventMsg, eventArg);
+				StateMessage::ActivatePGM_M(MESSAGE_ERROR, NEX_ICON_ERROR, NextionHMI::buffer, eventMsg, 1, PSTR(MSG_OK), StateMessage::ReturnToLastState, 0, 0);
+			}
+			else
+				StateMessage::ActivatePGM_M(MESSAGE_ERROR, NEX_ICON_ERROR, MSG_ERROR, eventMsg, 1, PSTR(MSG_OK), StateMessage::ReturnToLastState, 0, 0);
+			return;
+		case HMIevent::ERROR :
+			StateMessage::ActivatePGM_M(MESSAGE_ERROR, NEX_ICON_ERROR, MSG_ERROR, eventMsg, 1, PSTR(MSG_OK), StateMessage::ReturnToLastState, 0, 0);
 			return;
 		case HMIevent::WAIT_FOR_INPUT :
 			StateMessage::ActivatePGM(MESSAGE_DIALOG, NEX_ICON_INFO, eventMsg, PSTR(MSG_USERWAIT), 1, PSTR(MSG_OK), WaitOk_Push, 0, 0);
@@ -266,23 +268,19 @@ void NextionHMI::RaiseEvent(HMIevent event, uint8_t eventArg, const char *eventM
 	         break;
 	    case PAGE_MESSAGE :
 	         break;
-	    case PAGE_PAUSE :
-	         break;
-	    case PAGE_CHANGE :
-	         break;
 	    case PAGE_WIZARD :
 	         break;
 	    case PAGE_MENU :
 	         break;
 	    case PAGE_MOVEMENT :
 	         break;
-	    case PAGE_EXTRUDERS :
-	         break;
 	    case PAGE_SETTINGS :
 	         break;
 	    case PAGE_ABOUT :
 	         break;
 	    case PAGE_WIZARDZ :
+	         break;
+	    case PAGE_C_NUMBER :
 	         break;
 	}
 }
@@ -310,6 +308,14 @@ void NextionHMI::UploadFirmwareFromSerial(uint32_t tftSize) {
     Init();
 }
 
+void NextionHMI::ShowStartScreen(const char* header, const char* message) {
+	NexObject startScreen = NexObject(0,  0,  "start");
+	NexObject startHeader = NexObject(0,  2,  "t1");
+	NexObject startMessage = NexObject(0,  3,  "t2");
+	startScreen.show();
+	startHeader.setText(header);
+	startMessage.setText(message);
+}
 
 #if HAS_SDSUPPORT && PIN_EXISTS(SD_DETECT)
 void NextionHMI::UpdateSDIcon() {
