@@ -38,4 +38,14 @@
     SERIAL_EMV("lcd contrast value: ", lcd_contrast);
   }
 
-#endif // HAS_LCD_CONTRAST
+#elif ENABLED(NEXTION_HMI)
+  #define CODE_M250
+
+  /**
+   * M250: Read and optionally set the LCD brightness
+   */
+   inline void gcode_M250(void) {
+	 if (parser.seenval('C')) NextionHMI::SetBrightness(parser.value_int());
+	 SERIAL_EMV("lcd brighness value: ", NextionHMI::lcdBrightness);
+	}
+#endif

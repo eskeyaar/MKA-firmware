@@ -132,8 +132,8 @@
 #define HEATER_1_MAXTEMP 275 // (degC)
 #define HEATER_2_MAXTEMP 275 // (degC)
 #define HEATER_3_MAXTEMP 275 // (degC)
-#define BED_MAXTEMP      150 // (degC)
-#define CHAMBER_MAXTEMP  100 // (degC)
+#define BED_MAXTEMP      120 // (degC)
+#define CHAMBER_MAXTEMP  60 // (degC)
 #define COOLER_MAXTEMP   35  // (degC) 
 
 // The minimal temperature defines the temperature below which the heater will not be enabled It is used
@@ -415,7 +415,7 @@
  * If you get false positives for "Heating failed" increase WATCH TEMP PERIOD and/or decrease WATCH TEMP INCREASE
  * WATCH TEMP INCREASE should not be below 2.
  */
-#define WATCH_TEMP_PERIOD  20               // Seconds
+#define WATCH_TEMP_PERIOD  30               // Seconds
 #define WATCH_BED_TEMP_PERIOD 60
 
 #define WATCH_TEMP_INCREASE 2               // Degrees Celsius
@@ -435,7 +435,7 @@
  * *** IT IS HIGHLY RECOMMENDED TO LEAVE THIS OPTION ENABLED! ***      *
  *                                                                     *
  ***********************************************************************/
-//#define PREVENT_COLD_EXTRUSION
+#define PREVENT_COLD_EXTRUSION
 #define EXTRUDE_MINTEMP 170                 // Degree Celsius
 
 // This option prevents a single extrusion longer than EXTRUDE_MAXLENGTH.
