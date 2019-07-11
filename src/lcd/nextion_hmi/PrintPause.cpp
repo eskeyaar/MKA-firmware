@@ -72,7 +72,6 @@ void PrintPause::DoPauseExtruderMove(AxisEnum axis, const float &length, const f
         SdPrintingPaused = true;
       }
     #endif
-    print_job_counter.pause();
     Status = Pausing;
     NextionHMI::RaiseEvent(PRINT_PAUSING);
 
@@ -81,7 +80,7 @@ void PrintPause::DoPauseExtruderMove(AxisEnum axis, const float &length, const f
       printer.idle();
       printer.keepalive(InProcess);
     }
-    memset(planner.block_buffer, 0, sizeof(block_t)*BLOCK_BUFFER_SIZE);
+    //memset(planner.block_buffer, 0, sizeof(block_t)*BLOCK_BUFFER_SIZE);
 
     // Handle cancel
     if (printer.isAbortSDprinting()) return false;
@@ -102,7 +101,7 @@ void PrintPause::DoPauseExtruderMove(AxisEnum axis, const float &length, const f
     {
     	//get plastic driver of current extruder
     	int8_t drv = Tools::plastic_driver_of_extruder(tools.active_extruder);
-    	if (drv>=0) PrintPause::DoPauseExtruderMove((AxisEnum)(E_AXIS+drv), -retract, PrintPause::RetractFeedrate);
+    	if (drv>=0) PrintPause::DoPauseExtruderMove((AxisEnum)(E_AXIS+drv), -retract, PrintPause::UnloadFeedrate);
     }
 
     // Park the nozzle by moving up by z_lift and then moving to (x_pos, y_pos)
@@ -123,9 +122,11 @@ void PrintPause::DoPauseExtruderMove(AxisEnum axis, const float &length, const f
       heaters[BED_INDEX].start_idle_timer(bed_timeout);
     #endif
 
+    stepper.synchronize();
     // Indicate that the printer is paused
     Status = Paused;
     NextionHMI::RaiseEvent(PRINT_PAUSED);
+    print_job_counter.pause();
 
     printer.keepalive(PausedforUser);
     printer.setWaitForUser(true);
@@ -155,8 +156,10 @@ void PrintPause::ResumePrint(const float& purge_length) {
    Status = Resuming;
    NextionHMI::RaiseEvent(PRINT_PAUSE_RESUMING);
 
+   stepper.synchronize();
+
    //Switching to previously active extruder
-	if (resume_tool!=tools.active_extruder) tools.change(resume_tool, 0, false, false);
+	if (resume_tool!=tools.active_extruder) tools.change(resume_tool, 0, false, false, true);
 
    // Re-enable the heaters if they timed out
    bool  nozzle_timed_out  = false,
@@ -174,7 +177,7 @@ void PrintPause::ResumePrint(const float& purge_length) {
      heaters[h].reset_idle_timer();
    }
 
-   if (bed_timed_out)
+   if (bed_timed_out && heaters[BED_INDEX].target_temperature>30)
    {
 	  NextionHMI::RaiseEvent(HMIevent::HEATING_STARTED_BUILDPLATE, BED_INDEX);
 	  Temperature::wait_heater(&heaters[BED_INDEX], false);
@@ -184,14 +187,18 @@ void PrintPause::ResumePrint(const float& purge_length) {
    if (nozzle_timed_out)
    {
 	   LOOP_HOTEND() {
-		   NextionHMI::RaiseEvent(HMIevent::HEATING_STARTED_EXTRUDER, h);
-		   Temperature::wait_heater(&heaters[h], false);
-		   NextionHMI::RaiseEvent(HMIevent::HEATING_FINISHED);
+		   if (heaters[h].target_temperature>30)
+		   {
+			   NextionHMI::RaiseEvent(HMIevent::HEATING_STARTED_EXTRUDER, h);
+			   Temperature::wait_heater(&heaters[h], false);
+			   NextionHMI::RaiseEvent(HMIevent::HEATING_FINISHED);
+		   }
 	   }
    }
 
    printer.setWaitForHeatUp(false);
 
+   //memset(planner.block_buffer, 0, sizeof(block_t)*BLOCK_BUFFER_SIZE);
 
    // Move XY to starting position, then Z
    mechanics.do_blocking_move_to_xy(resume_position[X_AXIS], resume_position[Y_AXIS], NOZZLE_PARK_XY_FEEDRATE);
@@ -199,13 +206,17 @@ void PrintPause::ResumePrint(const float& purge_length) {
    // Set Z_AXIS to saved position
    mechanics.do_blocking_move_to_z(resume_position[Z_AXIS], NOZZLE_PARK_Z_FEEDRATE);
 
+   //memset(planner.block_buffer, 0, sizeof(block_t)*BLOCK_BUFFER_SIZE);
+
    // Purging plastic
    if (purge_length && !thermalManager.tooColdToExtrude(tools.active_extruder))
    {
    	//get plastic driver of current extruder
    	int8_t drv = Tools::plastic_driver_of_extruder(tools.active_extruder);
-   	if (drv>=0) PrintPause::DoPauseExtruderMove((AxisEnum)(E_AXIS+drv), purge_length, PrintPause::RetractFeedrate);
+   	if (drv>=0) PrintPause::DoPauseExtruderMove((AxisEnum)(E_AXIS+drv), purge_length, PrintPause::LoadFeedrate);
    }
+
+   //memset(planner.block_buffer, 0, sizeof(block_t)*BLOCK_BUFFER_SIZE);
 
    // Now all positions are resumed and ready to be confirmed
    // Set all to saved position
@@ -227,6 +238,7 @@ void PrintPause::ResumePrint(const float& purge_length) {
    Status = NotPaused;
    printer.setWaitForUser(false);
    NextionHMI::RaiseEvent(PRINT_PAUSE_RESUMED);
+   print_job_counter.start();
 
 }
 

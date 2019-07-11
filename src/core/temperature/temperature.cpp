@@ -238,9 +238,9 @@ void Temperature::spin() {
 	#else
     if (act->isON() && act->current_temperature > act->maxtemp) max_temp_error(act->ID);
     if (act->isON() && act->current_temperature < act->mintemp)
-    	{
+    {
     		min_temp_error(act->ID);
-    	}
+    }
 	#endif
 
 
@@ -736,7 +736,13 @@ void Temperature::_temp_error(const uint8_t h, const char * const serial_msg, co
   }
 
   #if ENABLED(NEXTION_HMI)
-  	  NextionHMI::RaiseEvent(HMIevent::TEMPERATURE_ERROR, h, lcd_msg);
+  	  	NextionHMI::RaiseEvent(HMIevent::TEMPERATURE_ERROR, h, lcd_msg);
+		#if HAS_SDSUPPORT
+			if ((IS_SD_PRINTING) && (PrintPause::Status==PrintPauseStatus::NotPaused)) {
+				PrintPause::PausePrint(PrintPause::RetractDistance);
+			}
+		#endif
+
   #endif
 
   lcd_setstatusPGM(lcd_msg);
@@ -829,8 +835,8 @@ void Temperature::max_temp_error(const uint8_t h) {
         *state = TRRunaway;
       case TRRunaway:
 #if ENABLED(NEXTION_HMI)
-    	char buff[30];
-		sprintf_P(buff, PSTR("%s//r T:%.1f/%.1f idle:%d"),MSG_T_THERMAL_RUNAWAY, temperature, target_temperature, heaters[h].isIdle());
+    	char buff[50];
+		sprintf_P(buff, PSTR("%s. T:%.1f/%.1f idle:%d"),MSG_T_THERMAL_RUNAWAY, temperature, target_temperature, heaters[h].isIdle());
     	NextionHMI::RaiseEvent(HMIevent::TEMPERATURE_ERROR, h, buff);
     	heaters[h].setIdle(true);
        // _temp_error(h, PSTR(MSG_T_THERMAL_RUNAWAY), PSTR(MSG_THERMAL_RUNAWAY));
