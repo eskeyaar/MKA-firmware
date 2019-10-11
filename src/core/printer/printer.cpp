@@ -97,7 +97,7 @@ PrinterMode Printer::mode =
 #endif
 
 #if ENABLED(IDLE_OOZING_PREVENT)
-  millis_t  Printer::axis_last_activity   = 0;
+  millis_l  Printer::axis_last_activity   = 0;
   bool      Printer::IDLE_OOZING_enabled  = true,
             Printer::IDLE_OOZING_retracted[EXTRUDERS] = ARRAY_BY_EXTRUDERS(false);
 #endif
@@ -192,9 +192,6 @@ void Printer::setup() {
 
   SERIAL_SMV(ECHO, MSG_FREE_MEMORY, HAL::getFreeRam());
   SERIAL_EMV(MSG_PLANNER_BUFFER_BYTES, (int)sizeof(block_t)*BLOCK_BUFFER_SIZE);
-
-  // Send "ok" after commands by default
-  commands.setup();
 
   #if HAS_SDSUPPORT
     card.mount();
@@ -366,21 +363,12 @@ void Printer::loop() {
       // Clear all command in quee
       commands.clear_queue();
 
-      // Fiber cutting is needed?
-      bool needCut = false;
-      bool moveXY = (stepper.current_block->steps[X_AXIS]>0) || (stepper.current_block->steps[Y_AXIS]>0);
-      bool move_fiber = false;
-      const int plastic_driver_extruders[] = PLASTIC_DRIVER_EXTRUDERS;
-      LOOP_EUVW(i)
-      {
-    	  if (plastic_driver_extruders[i-XYZ] == 0 && stepper.current_block->steps[i]>0) move_fiber = true;
-      }
-      needCut = (moveXY & move_fiber);
-
       // Stop all stepper
       stepper.quickstop_stepper();
 
-      //if(needCut) tools.cut_fiber();
+      // Fiber cutting is needed?
+      bool needCut = !tools.fiber_is_cut;
+      if(needCut) tools.cut_fiber();
 
       // Auto home
       #if Z_HOME_DIR > 0
@@ -469,7 +457,7 @@ void Printer::check_periodical_actions() {
 
 }
 
-void Printer::safe_delay(millis_t ms) {
+void Printer::safe_delay(millis_l ms) {
   while (ms > 50) {
     ms -= 50;
     HAL::delayMilliseconds(50);
@@ -1183,7 +1171,7 @@ void Printer::setDebugLevel(const uint8_t newLevel) {
   void Printer::handle_status_leds() {
 
     static bool red_led = false;
-    static millis_t next_status_led_update_ms = 0;
+    static millis_l next_status_led_update_ms = 0;
 
     if (ELAPSED(millis(), next_status_led_update_ms)) {
       next_status_led_update_ms += 500; // Update every 0.5s

@@ -65,7 +65,7 @@ void NextionHMI::Init() {
 	  //serial_print(buffer);
 	  //serial_print("\n>>>>>>>>>>>>\n");
 
-	if (strstr(buffer, "NX4832T035")) {
+	if (strstr(buffer, "NX")) {
 		SERIAL_MSG("Nextion LCD connected!  \n");
 	}
 	else
@@ -151,6 +151,8 @@ void NextionHMI::DrawUpdate() {
 	         break;
 	    case PAGE_WIZARDZ : StateWizardZ::DrawUpdate();
 	         break;
+	    case PAGE_DINFO : StateDInfo::DrawUpdate();
+	         break;
 	    case PAGE_C_NUMBER :
 	         break;
 	}
@@ -179,6 +181,8 @@ void NextionHMI::TouchUpdate() {
 	    case PAGE_SETTINGS : StateSettings::TouchUpdate();
 	         break;
 	    case PAGE_ABOUT : StateAbout::TouchUpdate();
+	         break;
+	    case PAGE_DINFO : StateDInfo::TouchUpdate();
 	         break;
 	    case PAGE_WIZARDZ : StateWizardZ::TouchUpdate();
 	         break;
@@ -318,7 +322,6 @@ void NextionHMI::ShowStartScreen(const char* header, const char* message) {
 	startHeader.setText(header);
 	startMessage.setText(message);
 }
-
 
 void NextionHMI::SetBrightness(uint8_t brightness) {
 	setCurrentBrightness(brightness);

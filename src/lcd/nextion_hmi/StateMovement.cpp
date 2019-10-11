@@ -57,10 +57,6 @@ void StateMovement::Extruders_Push(void* ptr) {
 	StateMovement::Activate(!_moveMode);
 }
 
-void StateMovement::Back_Push(void* ptr) {
-	StateMenu::ActivateMaintenance();
-}
-
 void StateMovement::Movement_Push(void* ptr) {
 	if (_moveMode==MODE_MOVE_EXTRUDERS && (ptr==&_bMovementAact || ptr==&_bMovementBact || ptr==&_bMovementCact))
 	{
@@ -80,7 +76,7 @@ void StateMovement::Movement_Push(void* ptr) {
 			//fan
 			ZERO(NextionHMI::buffer);
 			_gcode.getText(NextionHMI::buffer, sizeof(NextionHMI::buffer));
-			commands.enqueue_and_echo(NextionHMI::buffer);
+			commands.enqueue_one_now(NextionHMI::buffer);
 		}
 	}
 	else
@@ -97,9 +93,9 @@ void StateMovement::Movement_Push(void* ptr) {
 				return;
 			}
 		}
-		commands.enqueue_and_echo_P(PSTR("G91"));
-		commands.enqueue_and_echo(NextionHMI::buffer);
-		commands.enqueue_and_echo_P(PSTR("G90"));
+		commands.enqueue_now_P(PSTR("G91"));
+		commands.enqueue_one_now(NextionHMI::buffer);
+		commands.enqueue_now_P(PSTR("G90"));
 	}
 
 	DrawUpdate();
@@ -120,10 +116,11 @@ void StateMovement::Init() {
 	_bMovementCact.attachPush(Movement_Push, &_bMovementCact);
 
 	_bMovementMode.attachPush(Extruders_Push);
-	_bMovementBack.attachPush(Back_Push);
+
 }
 
-void StateMovement::Activate(bool mode) {
+void StateMovement::Activate(bool mode, NexTouchEventCb cbBack) {
+	if (cbBack!=nullptr) _bMovementBack.attachPush(cbBack);
 	_moveMode = mode;
 	_mode.setValue(_moveMode);
 	_fan.setValue(fans[1].Speed>0);

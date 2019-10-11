@@ -211,28 +211,28 @@
 #define CHANGE_MOVES 12
 
 //Change to T0 -          X      Y  Spd  Switch
-#define CHANGE_T0      {{-40.0, 137, 200, false},\
-						{-40.0, 207,  40, false},\
-						{-40.0, 287, 200, false},\
-						{-53.0, 287, 200, false},\
-						{-53.0, 282, 200,  true},\
-						{-53.0, 268,  50,  true},\
-						{-42.0, 268, 200, false},\
-						{-42.0, 137,  40, false},\
-						{  0.0,   0,   0, false},\
-						{  0.0,   0,   0, false},\
-						{  0.0,   0,   0, false},\
-						{  0.0,   0,   0, false}}
+#define CHANGE_T0      {{-20.0,  297,   200,  true},\
+						{-46.0,  297,   200,  true},\
+						{-46.0,  264.4,  50,  true},\
+						{-36.0,  264.4, 200,  true},\
+						{-36.0,  214,   200, false},\
+						{-36.0,  114,    40, false},\
+						{-20.0,  114,   200, false},\
+						{  0.0,    0,     0, false},\
+						{  0.0,    0,     0, false},\
+						{  0.0,    0,     0, false},\
+						{  0.0,    0,     0, false},\
+						{  0.0,    0,     0, false}}
 
 
 //Change to T1 -          X      Y  Spd  Switch
-#define CHANGE_T1      {{-40.0, 137.0, 200, false},\
-						{-40.0, 207.0,  40, false},\
-						{-53.0, 207.0, 200, false},\
-						{-53.9, 243.3, 200,  true},\
-						{-53.0, 257.3,  50,  true},\
-						{-43.0, 243.3, 200,  true},\
-						{-43.0, 139.0,  40, false},\
+#define CHANGE_T1      {{-20.0, 114.0, 200, false},\
+						{-46.0, 114.0, 200, false},\
+						{-46.0, 204.0,  40, false},\
+						{-46.0, 224.0, 200,  true},\
+						{-46.0, 260.0,  50,  true},\
+						{-20.0, 260.0, 200,  true},\
+						{  0.0,   0.0,   0, false},\
 						{  0.0,     0,   0, false},\
 						{  0.0,     0,   0, false},\
 						{  0.0,     0,   0, false},\
@@ -2170,7 +2170,7 @@
 #define PAUSE_PARK_NUMBER_OF_ALERT_BEEPS 10 // Number of alert beeps before printer goes quiet
 #define PAUSE_PARK_NO_STEPPER_TIMEOUT       // Enable for XYZ steppers to stay powered on during filament change.
 
-#define PARK_HEAD_ON_PAUSE                  // Park the nozzle during pause and filament change.
+//#define PARK_HEAD_ON_PAUSE                  // Park the nozzle during pause and filament change.
 //#define HOME_BEFORE_FILAMENT_CHANGE       // Ensure homing has been completed prior to parking for filament change
 
 //#define FILAMENT_LOAD_UNLOAD_GCODES       // Add M701/M702 Load/Unload G-codes, plus Load/Unload in the LCD Prepare menu.
