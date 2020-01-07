@@ -205,16 +205,39 @@
  * Anisoprint EG-6 extruder											   *
  *                                                                     *
  ***********************************************************************/
-//#define EG6_EXTRUDER
-#define EG5_EXTRUDER
+#define EG6_EXTRUDER
 
-// Defines which tools will be at zero (or max) position after homing each axis
-// If the homing is performed while other tool is active, a movement will
-// be done to set active tool to zero (or max) position according to
-// Hotend offset
-#define HOME_X_TOOL 1
-#define HOME_Y_TOOL 0
-#define HOME_Z_TOOL 0
+//Change moves
+#define CHANGE_MOVES 12
+
+//Change to T0 -          X      Y  Spd  Switch
+#define CHANGE_T0      {{  0.0,  0,   0,  true},\
+						{  0.0,  0,   0,  true},\
+						{  0.0,  0,   0,  true},\
+						{  0.0,  0,   0, false},\
+						{  0.0,  0,   0, false},\
+						{  0.0,  0,   0, false},\
+						{  0.0,  0,   0, false},\
+						{  0.0,  0,   0, false},\
+						{  0.0,  0,   0, false},\
+						{  0.0,  0,   0, false},\
+						{  0.0,  0,   0, false},\
+						{  0.0,  0,   0, false},\
+						{  0.0,  0,   0, false}}
+
+//Change to T1 -          X      Y  Spd  Switch
+#define CHANGE_T1      {{  0.0, 0,  0, false},\
+						{  0.0, 0,  0, false},\
+						{  0.0, 0,  0, false},\
+						{  0.0, 0,  0,  true},\
+						{  0.0, 0,  0,  true},\
+						{  0.0, 0,  0,  true},\
+						{  0.0, 0,  0,  true},\
+						{  0.0, 0,  0,  true},\
+						{  0.0, 0,  0, false},\
+						{  0.0, 0,  0, false},\
+						{  0.0, 0,  0, false},\
+						{  0.0, 0,  0, false}}
 
 //Cut settings
 #define CUT_SERVO_ID      0
@@ -2084,7 +2107,7 @@
 // Specify a park position as { X, Y, Z }
 #define NOZZLE_PARK_POINT { 10, 10, 20 }
 #define NOZZLE_PARK_XY_FEEDRATE 100   // X and Y axes feedrate in mm/s (also used for delta printers Z axis)
-#define NOZZLE_PARK_Z_FEEDRATE    5   // Z axis feedrate in mm/s (not used for delta printers)
+#define NOZZLE_PARK_Z_FEEDRATE   15   // Z axis feedrate in mm/s (not used for delta printers)
 /****************************************************************************************/
 
 
@@ -2138,11 +2161,12 @@
 
                                             // Filament Unload does a Retract, Delay, and Purge first:
 #define FILAMENT_UNLOAD_RETRACT_LENGTH 15   // (mm) Unload initial retract length.
-#define FILAMENT_UNLOAD_DELAY 5000          // (ms) Delay for the filament to cool after retract.
+#define FILAMENT_UNLOAD_DELAY 3000          // (ms) Delay for the filament to cool after extrude.
 #define FILAMENT_UNLOAD_PURGE_LENGTH 8      // (mm) An unretract is done, then this length is purged.
 
-#define PAUSE_PARK_NOZZLE_TIMEOUT 120       // (seconds) Time limit before the nozzle is turned off for safety.
-#define PAUSE_PARK_PRINTER_OFF 0           // (minute) Time limit before turn off printer if user doesn't change filament.
+#define PAUSE_PARK_NOZZLE_TIMEOUT 120       // (seconds) Time limit before the nozzle is turned off for safety after pause.
+#define PAUSE_PARK_NOZZLE_TIMEOUT_MANUAL 600// (seconds) Time limit before the nozzle is turned off for safety aftermanual heating on pause.
+#define PAUSE_PARK_PRINTER_OFF 0            // (minute) Time limit before turn off printer if user doesn't change filament.
 #define PAUSE_PARK_NUMBER_OF_ALERT_BEEPS 10 // Number of alert beeps before printer goes quiet
 #define PAUSE_PARK_NO_STEPPER_TIMEOUT       // Enable for XYZ steppers to stay powered on during filament change.
 

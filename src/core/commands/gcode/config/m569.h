@@ -23,33 +23,31 @@
 /**
  * mcode
  *
+ * Copyright (C) 2017 Alberto Cotronei @MagoKimbra
  */
 
-  #define CODE_M1013
-  
- /*
-  *
-  * M1013: Park/Unpark nozzle for heating near wipe station
-  * M1013 - Park
-  * M1013 R - Return
-  *
-  */
+#define CODE_M569
 
+/**
+ * M569: Stepper driver control
+ *
+ *  E[bool]           - Set X direction
+ *  Y[bool]           - Set Y direction
+ *  Z[bool]           - Set Z direction
+ *  E[bool]  		  - Set Extruder direction
+ *  U[bool]  		  - Set Extruder direction
+ *  V[bool]  		  - Set Extruder direction
+ *
+ */
 
+inline void gcode_M569() {
 
- inline void gcode_M1013(void) {
-	#if ENABLED(EG6_EXTRUDER)
-		if (parser.seen('R') )
-		{
-			tools.unpark_from_wipe();
-		}
-		else
-		{
-			tools.park_to_wipe();
-		}
-	#endif
- }
+  LOOP_XYZE(i) {
+    if (parser.seen(axis_codes[i])) {
+    	stepper.stepper_dir_invert[i] = parser.value_bool();
+    }
+  }
 
+  stepper.set_directions();
 
-
-
+}

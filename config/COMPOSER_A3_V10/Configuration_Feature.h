@@ -153,7 +153,7 @@
 // Put 9 for chamber cooling fan
 // -1 disables auto mode.
 // Default fan 1 is auto fan for Hotend 0
-#define AUTO_FAN { 8, -1, -1, -1, -1, -1 }
+#define AUTO_FAN { 8, -1, 9, 7, -1, -1 }
 // Parameters for Hotend Fan
 #define HOTEND_AUTO_FAN_TEMPERATURE  60
 #define HOTEND_AUTO_FAN_SPEED       255 // 255 = full speed
@@ -1127,7 +1127,7 @@
 //#define SD_DETECT_INVERTED
 
 #define SD_FINISHED_STEPPERRELEASE true           // if sd support and the file is finished: disable steppers?
-#define SD_FINISHED_RELEASECOMMAND "M84 X Y Z E"  // You might want to keep the z enabled so your bed stays in place.
+#define SD_FINISHED_RELEASECOMMAND "M84 X Y E"  // You might want to keep the z enabled so your bed stays in place.
 
 //#define MENU_ADDAUTOSTART
 
@@ -1783,7 +1783,7 @@
 #define DEFAULT_STEPPER_DEACTIVE_TIME 120
 #define DISABLE_INACTIVE_X
 #define DISABLE_INACTIVE_Y
-#define DISABLE_INACTIVE_Z
+//#define DISABLE_INACTIVE_Z
 #define DISABLE_INACTIVE_E
 /***********************************************************************/
 
@@ -2108,7 +2108,7 @@
 // Specify a park position as { X, Y, Z }
 #define NOZZLE_PARK_POINT { 10, 10, 20 }
 #define NOZZLE_PARK_XY_FEEDRATE 100   // X and Y axes feedrate in mm/s (also used for delta printers Z axis)
-#define NOZZLE_PARK_Z_FEEDRATE    5   // Z axis feedrate in mm/s (not used for delta printers)
+#define NOZZLE_PARK_Z_FEEDRATE   15   // Z axis feedrate in mm/s (not used for delta printers)
 /****************************************************************************************/
 
 
@@ -2140,8 +2140,8 @@
 #define PAUSE_PARK_EXTRUDE_FEEDRATE 5       //+(mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
 
 #if ENABLED(NEXTION_HMI)	      //For nextion HMI material loading/unloading wizard
-	#define PAUSE_PARK_UNLOAD_LENGTH {740, 900, 850}  // (mm) E0, E1, E2 length should be equal to DRIVER_EXTRUDERS
-	#define PAUSE_PARK_LOAD_LENGTH {610, 800, 740}    // (mm) E0, E1, E2 length should be equal to DRIVER_EXTRUDERS
+	#define PAUSE_PARK_UNLOAD_LENGTH {990, 1150, 1150}  // (mm) E0, E1, E2 length should be equal to DRIVER_EXTRUDERS
+	#define PAUSE_PARK_LOAD_LENGTH {660, 1050, 740}    // (mm) E0, E1, E2 length should be equal to DRIVER_EXTRUDERS
 #else
 #define PAUSE_PARK_UNLOAD_LENGTH 100        // (mm) The length of filament for a complete unload.
                                             //   For Bowden, the full length of the tube and nozzle.
@@ -2162,11 +2162,12 @@
 
                                             // Filament Unload does a Retract, Delay, and Purge first:
 #define FILAMENT_UNLOAD_RETRACT_LENGTH 15   // (mm) Unload initial retract length.
-#define FILAMENT_UNLOAD_DELAY 5000          // (ms) Delay for the filament to cool after retract.
+#define FILAMENT_UNLOAD_DELAY 3000          // (ms) Delay for the filament to cool after extrude.
 #define FILAMENT_UNLOAD_PURGE_LENGTH 8      // (mm) An unretract is done, then this length is purged.
 
-#define PAUSE_PARK_NOZZLE_TIMEOUT 120       // (seconds) Time limit before the nozzle is turned off for safety.
-#define PAUSE_PARK_PRINTER_OFF 0           // (minute) Time limit before turn off printer if user doesn't change filament.
+#define PAUSE_PARK_NOZZLE_TIMEOUT 120       // (seconds) Time limit before the nozzle is turned off for safety after pause.
+#define PAUSE_PARK_NOZZLE_TIMEOUT_MANUAL 600// (seconds) Time limit before the nozzle is turned off for safety aftermanual heating on pause.
+#define PAUSE_PARK_PRINTER_OFF 0            // (minute) Time limit before turn off printer if user doesn't change filament.
 #define PAUSE_PARK_NUMBER_OF_ALERT_BEEPS 10 // Number of alert beeps before printer goes quiet
 #define PAUSE_PARK_NO_STEPPER_TIMEOUT       // Enable for XYZ steppers to stay powered on during filament change.
 
