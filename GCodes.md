@@ -49,7 +49,7 @@ Codes marked with * are specific for Composer MKA firmware (of their meaning dif
 |  M84 | - | Disable steppers until next move, or use S[seconds] to specify an inactivity timeout, after which the steppers will be disabled. S0 to disable the timeout.
 |  M85 | - | Set inactivity shutdown timer with parameter S[seconds]. To disable set zero (default)
 |  M92 | - | Set axis steps per unit - same syntax as G92, H[microstep] L[Layer wanted]
-| M104 | - | T[int] 0-5 For Select Hotends (default 0), S[C°] Set hotend target temperature, R[C°] Set hotend idle temperature
+| M104 | - | T[int] 0-5 For Select Hotends (default 0), S[CÂ°] Set hotend target temperature, R[CÂ°] Set hotend idle temperature
 | M105 | - | Read current temp
 | M106 | - | P[fan] S[speed] F[frequency] U[pin] L[min speed] X[max speed] I[inverted logic] H[int] Set Auto mode - H=7 for controller - H-1 for disabled T[int] Triggered temperature
 | M107 | - | P[fan] Fan off
@@ -69,8 +69,8 @@ Codes marked with * are specific for Composer MKA firmware (of their meaning dif
 | M123 | ENDSTOP | Set Endstop Logic X[bool] Y[bool] Z[bool] I[X2 bool] J[Y2 bool] K[Z2 bool] P[Probe bool] D[Door bool]
 | M124 | ENDSTOP | Set Endstop Pullup X[bool] Y[bool] Z[bool] I[X2 bool] J[Y2 bool] K[Z2 bool] P[Probe bool] D[Door bool]
 | M125 | PARK HEAD ON PAUSE | Save current position and move to pause park position 
-| M140 | - | T[int] 0-3 For Select Beds (default 0), S[C°] Set hot bed target temperature, R[C°] Set hot bed idle temperature
-| M141 | - | T[int] 0-3 For Select Chambers (default 0), S[C°] Set hot chamber target temperature, R[C°] Set hot chamber idle temperature 
+| M140 | - | T[int] 0-3 For Select Beds (default 0), S[CÂ°] Set hot bed target temperature, R[CÂ°] Set hot bed idle temperature
+| M141 | - | T[int] 0-3 For Select Chambers (default 0), S[CÂ°] Set hot chamber target temperature, R[CÂ°] Set hot chamber idle temperature 
 | M145 | - | Set the heatup state H[hotend] B[bed] C[chamber] F[fan speed] for S[material] (0=PLA, 1=ABS, 2=GUM)
 | M155 | - | Auto report temperatures S[bool] Enable/disable
 | M190 | - | Sxxx - Wait for bed current temp to reach target temp. Waits only when heating Rxxx - Wait for bed current temp to reach target temp. Waits when heating and cooling
@@ -92,7 +92,7 @@ Codes marked with * are specific for Composer MKA firmware (of their meaning dif
 | M301 | - | Set PID parameters P I D and C. H[heaters] H = 0-3 Hotend, H = -1 BED, H = -2 CHAMBER, H = -3 COOLER, P[float] Kp term, I[float] Ki term, D[float] Kd term. 
 | M302 | - | Allow cold extrudes, or set the minimum extrude S[temperature].
 | M303 | - | PID relay autotune: H[heaters] H = 0-3 Hotend, H = -1 BED, H = -2 CHAMBER, H = -3 COOLER, S[temperature] sets the target temperature (default target temperature = 200C), C[cycles>, R[method>, U[Apply result>, R[Method] 0 = Classic Pid, 1 = Some overshoot, 2 = No Overshoot, 3 = Pessen Pid.
-| M305 | - | Set thermistor and ADC parameters: H[heaters] H = 0-3 Hotend, H = -1 BED, H = -2 CHAMBER, H = -3 COOLER, A[float] Thermistor resistance at 25°C, B[float] BetaK, C[float] Steinhart-Hart C coefficien, R[float] Pullup resistor value, L[int] ADC low offset correction, O[int] ADC high offset correction, P[int] Sensor Pin. 
+| M305 | - | Set thermistor and ADC parameters: H[heaters] H = 0-3 Hotend, H = -1 BED, H = -2 CHAMBER, H = -3 COOLER, A[float] Thermistor resistance at 25Â°C, B[float] BetaK, C[float] Steinhart-Hart C coefficien, R[float] Pullup resistor value, L[int] ADC low offset correction, O[int] ADC high offset correction, P[int] Sensor Pin. 
 | M306 | - | Set Heaters parameters: H[heaters] H = 0-3 Hotend, H = -1 BED, H = -2 CHAMBER, H = -3 COOLER, A[int] Power Drive Min, B[int] Power Drive Max, C[int] Power Max, F[int] Frequency, L[int] Min temperature, O[int] Max temperature, U[bool] Use Pid/bang bang, I[bool] Hardware Inverted, T[bool] Thermal Protection, P[int] Pin, Q[bool] PWM Hardware
 | M400 | - | Finish all moves
 | M500* | - | Stores paramters in EEPROM. Use "M500 S" to store system settings, without "S" only user settings will be stored
@@ -102,7 +102,7 @@ Codes marked with * are specific for Composer MKA firmware (of their meaning dif
 | M530 | - | Enables explicit printing mode (S1) or disables it (S0). L can set layer count
 | M531 | - | Filename - Define filename being printed
 | M532 | - | X[percent] L[curLayer] - update current print state progress (X=0..100) and layer L
-| M569* | - | Stepper driver direction control M569. Use X, Y, Z, E, U, V letters for axes, e.g. “M569 X0 Y1” to turn off X-axis inversion and turn on Y-axis inversion)
+| M569* | - | Stepper driver direction control M569. Use X, Y, Z, E, U, V letters for axes, e.g. "M569 X0 Y1" to turn off X-axis inversion and turn on Y-axis inversion)
 | M704* | - | Load/unload filament config. E[extruder] - Extruder driver number. L[distance] - Load distance. U[distance] - Unload distance.
 | M900 | LIN ADVANCE | K[factor] Set Linear Advance K-factor. LIN Advance is supported only for plastic extruder (E)
 | M999 | - | Restart after being stopped by error
