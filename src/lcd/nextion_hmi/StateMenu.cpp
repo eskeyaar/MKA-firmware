@@ -73,19 +73,20 @@ void StateMenu::ActivatePrintControl(void* ptr) {
 	}
 	else //Control menu while printing
 	{
-		_count.setValue(3);
+		_count.setValue(4);
 		_page.show();
 		NextionHMI::headerText.setTextPGM(PSTR(MSG_CONTROL));
 		NextionHMI::headerIcon.setPic(NEX_ICON_MAINTENANCE);
 
 		_b1.setTextPGM(PSTR(MSG_CANCEL_PRINT));
 		_b2.setTextPGM(PSTR(MSG_TUNE));
-		_b3.setTextPGM(PSTR(MSG_DINFO));
+		_b3.setTextPGM(PSTR(MSG_CORRECT_Z));
 		_b4.setTextPGM(PSTR(MSG_DINFO));
 
 		_b1.attachPush(Control_CancelPrint);
 		_b2.attachPush(Control_Tune);
-		_b3.attachPush(Control_DInfo);
+		_b3.attachPush(StateWizardZ::BabystepZ);
+		_b4.attachPush(Control_DInfo);
 	}
 
 
@@ -116,6 +117,17 @@ void StateMenu::Control_Tune_OK(void* ptr) {
 	  for (uint8_t i = COUNT(tools.e_factor); i--;)
 		tools.refresh_e_factor(i);
 	#endif
+
+	LOOP_HEATER()
+	{
+		heaters[h].updateCorrection();
+	}
+
+	LOOP_FAN()
+	{
+		fans[f].updateCorrection();
+	}
+
 }
 
 void StateMenu::Control_CancelPrint(void* ptr) {
@@ -323,7 +335,19 @@ void StateMenu::ActivateLoadUnload(void* ptr) {
 	NextionHMI::ActivateState(PAGE_MENU);
 	_count.setValue(2);
 	_page.show();
-	NextionHMI::headerText.setTextPGM(PSTR(MSG_MATERIALS));
+
+	switch (NextionHMI::wizardData) {
+		case E_AXIS:
+			NextionHMI::headerText.setTextPGM(PSTR(MSG_PLASTIC));
+			break;
+		case U_AXIS:
+			NextionHMI::headerText.setTextPGM(PSTR(MSG_COMP_FIBER));
+			break;
+		case V_AXIS:
+			NextionHMI::headerText.setTextPGM(PSTR(MSG_COMP_PLASTIC));
+			break;
+		}
+
 	NextionHMI::headerIcon.setPic(NEX_ICON_MAINTENANCE);
 
 	_b1.setTextPGM(PSTR(MSG_LOAD));

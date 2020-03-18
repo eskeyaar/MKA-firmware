@@ -236,10 +236,13 @@ void Temperature::spin() {
     		min_temp_error(act->ID);
     	}
 	#else
-    if (act->isON() && act->current_temperature > act->maxtemp) max_temp_error(act->ID);
+    if (act->isON() && act->current_temperature > act->maxtemp+MAXTEMP_ERROR_THRESHOLD)
+    {
+    	max_temp_error(act->ID);
+    }
     if (act->isON() && act->current_temperature < act->mintemp)
     {
-    		min_temp_error(act->ID);
+    	min_temp_error(act->ID);
     }
 	#endif
 
@@ -579,11 +582,8 @@ void Temperature::disable_all_heaters() {
 
   #if HEATER_COUNT > 0
     LOOP_HEATER() {
-      heaters[h].target_temperature = 0;
+      heaters[h].setTarget(0);
       heaters[h].soft_pwm = 0;
-      #if WATCH_THE_HEATER
-        heaters[h].start_watching();
-      #endif
     }
   #endif
 

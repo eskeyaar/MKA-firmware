@@ -163,10 +163,14 @@
 #define CONTROLLERFAN_SPEED         255 // 255 = full speed
 #define CONTROLLERFAN_MIN_SPEED       0
 // Parameters for Chamber Fan
-#define CHAMBERFAN_SPEED1         	128 // 255 = full speed
-#define CHAMBERFAN_TEMP1         	 40 // 255 = full speed
-#define CHAMBERFAN_SPEED2         	255 // 255 = full speed
-#define CHAMBERFAN_TEMP2         	 50 // 255 = full speed
+#define CHAMBERFAN_SPEED1         	 80 // 255 = full speed
+#define CHAMBERFAN_TEMP1         	 55
+#define CHAMBERFAN_SPEED2         	160 // 255 = full speed
+#define CHAMBERFAN_TEMP2         	 60
+#define CHAMBERFAN_SPEED3         	255
+#define CHAMBERFAN_TEMP3         	 65 // 255 = full speed
+#define CHAMBERFAN_HYSTERESIS		  2
+
 #define CHAMBERFAN_MIN_SPEED          0
 /**************************************************************************/
 
@@ -680,17 +684,21 @@
  * Warning: Does not respect endstops!                                    *
  *                                                                        *
  **************************************************************************/
-//#define BABYSTEPPING
+#define BABYSTEPPING
 
 // Also enable X/Y Babystepping. Not supported on DELTA!
 //#define BABYSTEP_XY
 
+// Enable Babystep G-code (M290)
+//#define BABYSTEP_GCODE
 // Change if Z babysteps should go the other way
 #define BABYSTEP_INVERT_Z false
 // Babysteps are very small. Increase for faster motion.
-#define BABYSTEP_MULTIPLICATOR 1
+#define BABYSTEP_MULTIPLICATOR 1s
 // Enable to combine M851 and Babystepping
 //#define BABYSTEP_ZPROBE_OFFSET
+// Enable to combine Home offset and Babystepping
+#define BABYSTEP_HOME_OFFSETS
 // Double-click on the Status Screen for Z Babystepping.
 //#define DOUBLECLICK_FOR_Z_BABYSTEPPING
 // Maximum interval between clicks, in milliseconds.
@@ -1808,6 +1816,24 @@
  ***********************************************************************/
 // (Âµs) The smallest stepper pulse allowed
 #define MINIMUM_STEPPER_PULSE 1
+/***********************************************************************/
+
+/***********************************************************************
+ ********************** Direction Stepper Delay ************************
+ ***********************************************************************
+ *                                                                     *
+ * Minimum delay after setting the stepper DIR (in ns)                 *
+ *      0 : No delay at all - But, at least 10µs are expected          *
+ *     50 : Minimum for TMC2xxx drivers                                *
+ *    200 : Minimum for A4988 drivers                                  *
+ *    400 : Minimum for A5984 drivers                                  *
+ *    500 : Minimum for LV8729 drivers (guess, no info in datasheet)   *
+ *    650 : Minimum for DRV8825 drivers                                *
+ *   1500 : Minimum for TB6600 drivers (guess, no info in datasheet)   *
+ *  15000 : Minimum for TB6560 drivers (guess, no info in datasheet)   *
+ *                                                                     *
+ ***********************************************************************/
+#define DIRECTION_STEPPER_DELAY 50
 /***********************************************************************/
 
 

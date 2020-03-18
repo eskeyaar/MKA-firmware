@@ -454,14 +454,6 @@ void EEPROM::Postprocess() {
     	Factory_Settings();
     	auto sysLoaded=false, userLoaded=false;
 
-    	if (Load_Sys())
-    	{
-    		sysLoaded = true;
-    	}
-    	else
-    	{
-    		Factory_Settings();
-    	}
     	if (Load_Usr())
     	{
     		userLoaded = true;
@@ -470,6 +462,16 @@ void EEPROM::Postprocess() {
     	{
     		Factory_Settings();
     	}
+
+    	if (Load_Sys())
+    	{
+    		sysLoaded = true;
+    	}
+    	else
+    	{
+    		Factory_Settings();
+    	}
+
     	if (sysLoaded || userLoaded) Postprocess();
 		#if ENABLED(EEPROM_CHITCHAT)
 		  Print_Settings();
@@ -659,6 +661,12 @@ void EEPROM::Postprocess() {
 		  stored_sys_crc = final_crc;
 		  strncpy(stored_sys_ver, syscfg_version, sizeof(stored_sys_ver));
         }
+        else
+        {
+			#if ENABLED(NEXTION_HMI)
+			  NextionHMI::RaiseEvent(HMIevent::EEPROM_ERROR, 0, MSG_EEPROM_FAIL_WRITE_USER);
+			#endif
+        }
 
         EEPROM_FINISH();
 
@@ -814,6 +822,7 @@ void EEPROM::Postprocess() {
 			  read_data(eeprom_index, (uint8_t*)&stored_crc, sizeof(stored_crc), &temp_crc);
 			#endif
 
+
 			if (working_crc == stored_crc) {
 			  #if ENABLED(EEPROM_CHITCHAT)
 				SERIAL_VAL(syscfg_version);
@@ -830,6 +839,9 @@ void EEPROM::Postprocess() {
 				SERIAL_SMV(ER, "EEPROM usercfg CRC mismatch - (stored) ", stored_crc);
 				SERIAL_MV(" != ", working_crc);
 				SERIAL_EM(" (calculated)!");
+			  #endif
+			  #if ENABLED(NEXTION_HMI)
+				NextionHMI::RaiseEvent(HMIevent::EEPROM_ERROR, 0, MSG_EEPROM_FAIL_READ_SYSTEM);
 			  #endif
 			}
 
@@ -887,6 +899,7 @@ void EEPROM::Postprocess() {
           }
         #endif
 
+
         if (!eeprom_error) {
           const int eeprom_size = eeprom_index;
 
@@ -910,6 +923,12 @@ void EEPROM::Postprocess() {
 
   		  stored_usr_crc = final_crc;
   		  strncpy(stored_usr_ver, usrcfg_version, sizeof(stored_usr_ver));
+        }
+        else
+        {
+			#if ENABLED(NEXTION_HMI)
+			  NextionHMI::RaiseEvent(HMIevent::EEPROM_ERROR, 0, MSG_EEPROM_FAIL_WRITE_USER);
+			#endif
         }
 
         EEPROM_FINISH();
@@ -946,9 +965,6 @@ void EEPROM::Postprocess() {
           eeprom_error = true;
         }
         else {
-
-
-          float dummy = 0;
 
           working_crc = 0; // Init to 0. Accumulated by EEPROM_READ
 
@@ -988,6 +1004,8 @@ void EEPROM::Postprocess() {
             read_data(eeprom_index, (uint8_t*)&stored_crc, sizeof(stored_crc), &temp_crc);
           #endif
 
+
+
           if (working_crc == stored_crc) {
             #if ENABLED(EEPROM_CHITCHAT)
               SERIAL_VAL(usrcfg_version);
@@ -1005,6 +1023,9 @@ void EEPROM::Postprocess() {
               SERIAL_MV(" != ", working_crc);
               SERIAL_EM(" (calculated)!");
             #endif
+			#if ENABLED(NEXTION_HMI)
+              NextionHMI::RaiseEvent(HMIevent::EEPROM_ERROR, 0, MSG_EEPROM_FAIL_READ_USER);
+			#endif
           }
 
         }
@@ -1013,10 +1034,6 @@ void EEPROM::Postprocess() {
 
         return !eeprom_error;
     }
-
-
-
-
 
 #else
   /**

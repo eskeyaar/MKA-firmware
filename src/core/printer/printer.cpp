@@ -204,12 +204,14 @@ void Printer::setup() {
   // Init endstops and pullups
   endstops.init();
 
+  #if ENABLED(NEXTION_HMI)
+	NextionHMI::Init();
+  #endif
+
   // Load data from EEPROM if available (or use defaults)
   // This also updates variables in the planner, elsewhere
 
   const bool eeprom_loaded = eeprom.Load_Settings();
-
-
 
   #if ENABLED(WORKSPACE_OFFSETS)
     // Initialize current position based on home_offset
@@ -276,7 +278,7 @@ void Printer::setup() {
   #endif
 
   #if ENABLED(NEXTION_HMI)
-    NextionHMI::Init();
+    NextionHMI::SetBrightness(NextionHMI::lcdBrightness);
   #else
 	lcd_init();
 	LCD_MESSAGEPGM(WELCOME_MSG);
@@ -308,18 +310,17 @@ void Printer::setup() {
   #endif
 
   #if ENABLED(NEXTION_HMI)
-	StateStatus::Activate();
+    if (NextionHMI::GetActiveState()!=PAGE_MESSAGE)
+	{
+		StateStatus::Activate();
+	}
   #endif
 
   #if FAN_COUNT > 0
-    LOOP_FAN() fans[f].Speed = 0;
+    LOOP_FAN() fans[f].setSpeed(0);
   #endif
 
   if (!eeprom_loaded) lcd_eeprom_allert();
-
-  //#if HAS_SDSUPPORT
-    //card.checkautostart(false);
-  //#endif
 
   #if HAS_SD_RESTART
     restart.do_print_job();
@@ -370,6 +371,9 @@ void Printer::loop() {
       bool needCut = !tools.fiber_is_cut;
       if(needCut) tools.cut_fiber();
 
+      //Reset parameters that were tuned during the print
+      clean_tuned_parameters();
+
       // Auto home
       #if Z_HOME_DIR > 0
         mechanics.home();
@@ -380,7 +384,7 @@ void Printer::loop() {
       // Disabled Heaters and Fan
       thermalManager.disable_all_heaters();
       #if FAN_COUNT > 0
-        LOOP_FAN() fans[f].Speed = 0;
+        LOOP_FAN() fans[f].setSpeed(0);
       #endif
 
       // Stop printer job timer
@@ -662,6 +666,10 @@ void Printer::idle(const bool ignore_stepper_queue/*=false*/) {
     #endif
 
   #endif // ENABLED(FLOWMETER_SENSOR)
+
+	#if ENABLED(BABYSTEPPING)
+	  babystep.spin();
+	#endif
 
   // Prevent steppers timing-out in the middle of M6003
   #if ENABLED(ADVANCED_PAUSE_FEATURE) && ENABLED(PAUSE_PARK_NO_STEPPER_TIMEOUT)
@@ -1136,6 +1144,41 @@ void Printer::setDebugLevel(const uint8_t newLevel) {
     }
   }
   SERIAL_EMV("DebugLevel:", (int)mk_debug_flag);
+}
+
+
+/**
+ * Clean parameters, that were tuned during print after print was finished/cancelled
+ */
+void Printer::clean_tuned_parameters() {
+
+    mechanics.feedrate_percentage = 100;  // 100% mechanics.feedrate_mm_s
+    tools.flow_percentage[E_AXIS-XYZ] = 100;
+	#if (DRIVER_EXTRUDERS>2)
+    	tools.flow_percentage[V_AXIS-XYZ] = 100;
+	#endif
+
+	#if HAS_HEATER_0
+		heaters[HOT0_INDEX].temperature_correction = 0;
+	#endif
+	#if HAS_HEATER_1
+    	heaters[HOT1_INDEX].temperature_correction = 0;
+	#endif
+	#if HAS_HEATER_BED
+		heaters[BED_INDEX].temperature_correction = 0;
+	#endif
+	#if ENABLED(EG6_EXTRUDER)
+	  tools.parked_near_wipe = false;
+	#endif
+	#if HAS_FAN0
+		fans[FAN0_INDEX].speed_correction = 0;
+	#endif
+	#if HAS_FAN1
+		fans[FAN1_INDEX].speed_correction = 0;
+	#endif
+	#if HAS_FAN2
+		fans[FAN2_INDEX].speed_correction = 0;
+	#endif
 }
 
 #if ENABLED(HOST_KEEPALIVE_FEATURE)

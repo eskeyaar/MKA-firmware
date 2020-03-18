@@ -48,6 +48,7 @@
 #include "Arduino.h"
 #include "SDFat.h"
 
+
 extern int8_t RFstricmp(const char* s1, const char* s2) {
   while(*s1 && (tolower(*s1) == tolower(*s2)))
     s1++, s2++;
@@ -1675,6 +1676,31 @@ bool SdBaseFile::printModifyDateTime() {
 FAIL:
   return false;
 }
+
+/** Get a file's modify date and time
+ *
+ * \return The value is returned for success and
+ * the value zero is returned for failure.
+ */
+
+int16_t SdBaseFile::getModifyDate() {
+	dir_t dir;
+	if (!dirEntry(&dir)) {
+	  DBG_FAIL_MACRO;
+	  return 0;
+	}
+	return dir.lastWriteDate;
+}
+
+int16_t SdBaseFile::getModifyTime() {
+	dir_t dir;
+	if (!dirEntry(&dir)) {
+	  DBG_FAIL_MACRO;
+	  return 0;
+	}
+	return dir.lastWriteTime;
+}
+
 /** Template for SdBaseFile::printField() */
 
 template <typename Type>
@@ -4287,6 +4313,8 @@ void SdFatUtil::SerialPrint_P(PGM_P str) {
 void SdFatUtil::SerialPrintln_P(PGM_P str) {
   SERIAL_ET(str);
 }
+
+
 
 // ==============
 

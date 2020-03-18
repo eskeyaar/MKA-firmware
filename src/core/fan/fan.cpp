@@ -38,6 +38,8 @@
   void Fan::init() {
 
     Speed               = 0;
+    speed_nocorr		= 0;
+    speed_correction 	= 0;
     paused_Speed        = 0;
     Kickstart           = 0;
     pwm_pos             = 0;
@@ -127,9 +129,31 @@
     // Check for chamber
 	#if HAS_HEATER_CHAMBER
 		if (autoMonitored==9) {
-			Speed = CHAMBERFAN_MIN_SPEED;
-			if (heaters[CHAMBER_INDEX].current_temperature > CHAMBERFAN_TEMP2) Speed = CHAMBERFAN_SPEED2;
-			else if (heaters[CHAMBER_INDEX].current_temperature > CHAMBERFAN_TEMP1) Speed = CHAMBERFAN_SPEED1;
+			//Turned off
+			if (Speed == CHAMBERFAN_MIN_SPEED)
+			{
+				if (heaters[CHAMBER_INDEX].current_temperature > CHAMBERFAN_TEMP3) Speed = CHAMBERFAN_SPEED3;
+				else if (heaters[CHAMBER_INDEX].current_temperature > CHAMBERFAN_TEMP2) Speed = CHAMBERFAN_SPEED2;
+				else if (heaters[CHAMBER_INDEX].current_temperature > CHAMBERFAN_TEMP1) Speed = CHAMBERFAN_SPEED1;
+			}
+			else if (Speed == CHAMBERFAN_SPEED1)
+			{
+				if (heaters[CHAMBER_INDEX].current_temperature > CHAMBERFAN_TEMP3) Speed = CHAMBERFAN_SPEED3;
+				else if (heaters[CHAMBER_INDEX].current_temperature > CHAMBERFAN_TEMP2) Speed = CHAMBERFAN_SPEED2;
+				else if (heaters[CHAMBER_INDEX].current_temperature < CHAMBERFAN_TEMP1 - CHAMBERFAN_HYSTERESIS) Speed = CHAMBERFAN_MIN_SPEED;
+			}
+			else if (Speed == CHAMBERFAN_SPEED2)
+			{
+				if (heaters[CHAMBER_INDEX].current_temperature > CHAMBERFAN_TEMP3) Speed = CHAMBERFAN_SPEED3;
+				else if (heaters[CHAMBER_INDEX].current_temperature < CHAMBERFAN_TEMP1 - CHAMBERFAN_HYSTERESIS) Speed = CHAMBERFAN_MIN_SPEED;
+				else if (heaters[CHAMBER_INDEX].current_temperature < CHAMBERFAN_TEMP2 - CHAMBERFAN_HYSTERESIS) Speed = CHAMBERFAN_SPEED1;
+			}
+			else if (Speed == CHAMBERFAN_SPEED3)
+			{
+				if (heaters[CHAMBER_INDEX].current_temperature < CHAMBERFAN_TEMP1 - CHAMBERFAN_HYSTERESIS) Speed = CHAMBERFAN_MIN_SPEED;
+				else if (heaters[CHAMBER_INDEX].current_temperature < CHAMBERFAN_TEMP2 - CHAMBERFAN_HYSTERESIS) Speed = CHAMBERFAN_SPEED1;
+				else if (heaters[CHAMBER_INDEX].current_temperature < CHAMBERFAN_TEMP3 - CHAMBERFAN_HYSTERESIS) Speed = CHAMBERFAN_SPEED2;
+			}
 		}
 	#endif
 

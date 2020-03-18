@@ -142,6 +142,30 @@
   #define MSG_COMP_PLASTIC_FLOW              _UxGT("Composite plastic flow (%)")
 #endif
 
+#ifndef MSG_TEMPERATURE_CORRECTION_H
+  #define MSG_TEMPERATURE_CORRECTION_H              _UxGT("Temperature correction")
+#endif
+
+#ifndef MSG_FAN_CORRECTION_H
+  #define MSG_FAN_CORRECTION_H              		_UxGT("Fan correction")
+#endif
+
+#ifndef MSG_FANCOR_NOZZLE
+  #define MSG_FANCOR_NOZZLE            				_UxGT("Part cooling correction (%)")
+#endif
+
+#ifndef MSG_TEMPCOR_PLASTIC
+  #define MSG_TEMPCOR_PLASTIC            			_UxGT("Plastic temp. correction (\370C)")
+#endif
+
+#ifndef MSG_TEMPCOR_COMPOSITE
+  #define MSG_TEMPCOR_COMPOSITE            			_UxGT("Composite temp. correction (\370C)")
+#endif
+
+#ifndef MSG_TEMPCOR_BP
+  #define MSG_TEMPCOR_BP            				_UxGT("Buildplate temp. correction (\370C)")
+#endif
+
 #ifndef MSG_PRINTING
   #define MSG_PRINTING              				_UxGT("Printing...")
 #endif
@@ -166,12 +190,36 @@
   #define MSG_NO_SD              					_UxGT("No SD card found")
 #endif
 
+#ifndef MSG_LONG_FILENAME
+  #define MSG_LONG_FILENAME              			_UxGT("File name is too long. Please use name which is shorter than 50 characters.")
+#endif
+
+#ifndef MSG_FILE_MODIFIED_DATE
+  #define MSG_FILE_MODIFIED_DATE              		_UxGT("Modified: %.2i.%.2i.%.4i %.2i:%.2i")
+#endif
+
+#ifndef MSG_PLASTIC_CONS
+  #define MSG_PLASTIC_CONS              			_UxGT("%s (%.1f g)")
+#endif
+
+#ifndef MSG_FIBER_CONS
+  #define MSG_FIBER_CONS              				_UxGT("%s (%.1f m)")
+#endif
+
+#ifndef MSG_FILE_PRINT_TIME
+  #define MSG_FILE_PRINT_TIME              			_UxGT("Print time: %s")
+#endif
+
 #ifndef MSG_DONE
   #define MSG_DONE             						_UxGT("DONE!")
 #endif
 
 #ifndef MSG_ERROR
   #define MSG_ERROR             					_UxGT("Error")
+#endif
+
+#ifndef MSG_WARNING
+  #define MSG_WARNING             					_UxGT("Warning")
 #endif
 
 #ifndef MSG_FINISHED
@@ -224,7 +272,6 @@
 
 #ifndef MSG_COMP_Z_OFFSET
   #define MSG_COMP_Z_OFFSET                   		_UxGT("Comp. Z-offset")
-
 #endif
 
 #ifndef MSG_MOVE
@@ -287,8 +334,8 @@
   #define MSG_TUNE                    				_UxGT("Tune")
 #endif
 
-#ifndef MSG_ADJUST_Z
-  #define MSG_ADJUST_Z                    			_UxGT("Adjust Z")
+#ifndef MSG_CORRECT_Z
+  #define MSG_CORRECT_Z                    			_UxGT("Correct Z")
 #endif
 
 #ifndef RESTART_TO_CONTINUE
@@ -304,7 +351,7 @@
 #endif
 
 #ifndef MSG_HEADER_UNLOAD_MATERIAL
-  #define MSG_HEADER_UNLOAD_MATERIAL                _UxGT("Unload material")
+  #define MSG_HEADER_UNLOAD_MATERIAL                _UxGT(" unloading")
 #endif
 
 #ifndef MSG_UNLOAD_MATERIAL_ST1
@@ -328,7 +375,7 @@
 #endif
 
 #ifndef MSG_HEADER_LOAD_MATERIAL
-  #define MSG_HEADER_LOAD_MATERIAL                  _UxGT("Load material")
+  #define MSG_HEADER_LOAD_MATERIAL                  _UxGT(" loading")
 #endif
 
 #ifndef MSG_LOAD_MATERIAL_ST1
@@ -419,6 +466,14 @@
   #define MSG_BP_CALIBR_ST9                    		_UxGT("Repeat this for the right corner.")
 #endif
 
+#ifndef MSG_HEADER_Z_BABYSTEP
+  #define MSG_HEADER_Z_BABYSTEP                    	_UxGT("Z axis correction")
+#endif
+
+#ifndef MSG_Z_BABYSTEP
+  #define MSG_Z_BABYSTEP                   			_UxGT("If your first layer appears to be too thick\\ror too thin you can move the buildplate with\\rthe buttons below to correct Z axis\\rcalibration (max. correction is 1 mm).")
+#endif
+
 #ifndef MSG_PAUSE_DURING_FIBER
   #define MSG_PAUSE_DURING_FIBER                    _UxGT("Print can't be paused during fiber\\rprinting. Pause will be made after the\\rcurrent fiber reinforced path.")
 #endif
@@ -475,9 +530,11 @@
 #ifndef MSG_PLASTIC_P
   #define MSG_PLASTIC_P                  	 _UxGT("Plastic P")
 #endif
+
 #ifndef MSG_PLASTIC_I
   #define MSG_PLASTIC_I                  	 _UxGT("Plastic I")
 #endif
+
 #ifndef MSG_PLASTIC_D
   #define MSG_PLASTIC_D                  	 _UxGT("Plastic D")
 #endif
@@ -485,9 +542,11 @@
 #ifndef MSG_COMPOSITE_P
   #define MSG_COMPOSITE_P                  	 _UxGT("Composite P")
 #endif
+
 #ifndef MSG_COMPOSITE_I
   #define MSG_COMPOSITE_I                  	 _UxGT("Composite I")
 #endif
+
 #ifndef MSG_COMPOSITE_D
   #define MSG_COMPOSITE_D                  	 _UxGT("Composite D")
 #endif
@@ -495,9 +554,11 @@
 #ifndef MSG_BUILDPLATE_P
   #define MSG_BUILDPLATE_P                   _UxGT("Buildplate P")
 #endif
+
 #ifndef MSG_BUILDPLATE_I
   #define MSG_BUILDPLATE_I                   _UxGT("Buildplate I")
 #endif
+
 #ifndef MSG_BUILDPLATE_D
   #define MSG_BUILDPLATE_D                   _UxGT("Buildplate D")
 #endif
@@ -510,17 +571,25 @@
   #define MSG_FEEDRATE              		_UxGT("Feedrate (%)")
 #endif
 
-#ifndef MSG_PLASTIC_FLOW_H
-  #define MSG_PLASTIC_FLOW_H                 _UxGT("Plastic flow")
+// EEPROM ERRORS
+#ifndef MSG_EEPROM_FAIL_READ_SYSTEM
+  #define MSG_EEPROM_FAIL_READ_SYSTEM         "Failed to read System Config from EEPROM.\\rPlease try to update printer firmware.\\rIf the error persists, please contact\\rSupport"
 #endif
 
-#ifndef MSG_PLASTIC_FLOW
-  #define MSG_PLASTIC_FLOW              	_UxGT("Plastic flow (%)")
+#ifndef MSG_EEPROM_FAIL_WRITE_SYSTEM
+  #define MSG_EEPROM_FAIL_WRITE_SYSTEM        "Failed to write System Config to EEPROM.\\rPlease try to update printer firmware.\\rIf the error persists, please contact\\rSupport"
 #endif
 
-#ifndef MSG_COMP_PLASTIC_FLOW
-  #define MSG_COMP_PLASTIC_FLOW              _UxGT("Composite plastic flow (%)")
+#ifndef MSG_EEPROM_FAIL_READ_USER
+  #define MSG_EEPROM_FAIL_READ_USER           "Failed to read User Config from EEPROM.\\rDefault settings were loaded. Buildpate and\\rprinthead re-calibration may be needed.\\rIf the error persists, please contact\\rSupport"
 #endif
+
+#ifndef MSG_EEPROM_FAIL_WRITE_USER
+  #define MSG_EEPROM_FAIL_WRITE_USER          "Failed to save User Config to EEPROM.\\rPlease reset the printer and try again.\\rIf the error persists, please contact\\rSupport"
+#endif
+
+
+
 
 
 #ifndef WELCOME_MSG
@@ -654,6 +723,9 @@
 #endif
 #ifndef MSG_SWITCH_PS_OFF
   #define MSG_SWITCH_PS_OFF                   _UxGT("Switch power off")
+#endif
+#ifndef MSG_PRINT_TIME
+  #define MSG_PRINT_TIME              		_UxGT("Print time: %d:%.2i")
 #endif
 #ifndef MSG_EXTRUDE
   #define MSG_EXTRUDE                         _UxGT("Extrude")

@@ -68,7 +68,9 @@
                   pidMax;
       int16_t     target_temperature,
                   mintemp,
-                  maxtemp;
+                  maxtemp,
+				  target_temp_nocorr,
+				  temperature_correction;
       float       current_temperature,
                   Kp,
                   Ki,
@@ -101,6 +103,7 @@
       void init();
 
       void setTarget(int16_t celsius);
+      void updateCorrection();
       void updatePID();
       void get_pid_output(const bool cycle_1s);
       void print_PID(const bool dump);
@@ -115,7 +118,7 @@
 
       FORCE_INLINE void updateCurrentTemperature() {
     	  float new_temperature = this->sensor.getTemperature();
-    	  if ((new_temperature < this->mintemp) || (new_temperature > this->maxtemp))
+    	  if ((new_temperature < this->mintemp) || (new_temperature > this->maxtemp+MAXTEMP_ERROR_THRESHOLD))
     	  {
         	  if (++consecutive_error_temp >= MAX_CONSECUTIVE_ERROR_TEMP)
         	  {
